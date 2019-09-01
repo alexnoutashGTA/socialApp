@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import {Transport} from '../transport/transport.service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { HomePage } from './home.page';
+import {MaterialModule} from '../material.module';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { HomePage } from './home.page';
     FormsModule,
     IonicModule,
     ScrollingModule,
+      MaterialModule,
     RouterModule.forChild([
       {
         path: '',
