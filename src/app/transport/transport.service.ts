@@ -6,7 +6,7 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 })
 export class Transport {
   postsUrl = 'https://jsonplaceholder.typicode.com/posts';
-  contributerDetailUrl = new String('https://jsonplaceholder.typicode.com/users/')
+  contributerDetailUrl = new String('https://jsonplaceholder.typicode.com/users/');
   constructor(private http: HttpClient) {
 
   }
