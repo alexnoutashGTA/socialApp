@@ -7,13 +7,13 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-button (click)="toggleInfiniteScroll()" expand="block">
-    Toggle Infinite Scroll
+  <ion-button  expand="block">
+     Scroll to view more
   </ion-button>
 
   <ion-list>
     <ion-item *ngFor="let item of dataList">
-      <ion-label>{{item}}</ion-label>
+      <ion-label>{{item.title}}</ion-label>
     </ion-item>
   </ion-list>
 
