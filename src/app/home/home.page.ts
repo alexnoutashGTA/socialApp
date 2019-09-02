@@ -12,25 +12,28 @@ export class HomePage implements OnInit {
   constructor(
       private transport: Transport) {
     this.presentationSlice = [];
-    this.contributerInfoList = [];
+    this.contributorInfoList = [];
     this.presentationDetailedSlice = [];
   }
   postsCollection: any;
   presentationSlice: any;
-  contributerInfoList: any;
+  contributorInfoList: any;
   presentationDetailedSlice: any;
+  commentCount:any;
+
   // @ts-ignore
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   ngOnInit() {
+    //load first 10 Posts
     this.transport.getPosts().subscribe(data => {
       this.postsCollection = data;
       this.addDataToPresenter();
     });
   }
 
+  //load data when scrolling
   loadData(event) {
-    const newIndex = this.presentationSlice.length;
     setTimeout(() => {
       this.addDataToPresenter();
       event.target.complete();
@@ -39,22 +42,35 @@ export class HomePage implements OnInit {
       }
     }, 500);
   }
+
+  //get Posts
   addDataToPresenter() {
       const startindex = this.presentationSlice.length;
       this.presentationSlice.push(...this.postsCollection.slice(startindex, startindex + 10));
       this.addDetailToPresenter();
   }
+
+  //Get Post details, name, company and comments number
   addDetailToPresenter()  {
     this.presentationSlice.forEach(async record => {
       let  detail: any;
-      const detailRecordIndex = this.contributerInfoList.indexOf(contributer => contributer.id === record.userId);
+      let  postComment: any;
+      let commentSize:any;
+      const detailRecordIndex = this.contributorInfoList.indexOf(contributer => contributer.id === record.userId);
       if (detailRecordIndex < 0) {
+        //get contributor detail
         detail = await this.transport.getContributorDetail(record.userId);
-        this.contributerInfoList.push(detail);
+        this.contributorInfoList.push(detail);
+        //get comments
+        postComment = await this.transport.getPostComment(record.id);
+        this.commentCount=postComment;
       } else {
-        detail = this.contributerInfoList[detailRecordIndex];
+        detail = this.contributorInfoList[detailRecordIndex];
       }
-      this.presentationDetailedSlice.push({...record, ...detail});
+      //get number of comments
+      commentSize = this.commentCount.filter(com => com.postId ==  record.id);
+      //records to display
+      this.presentationDetailedSlice.push({...record, ...detail, ...{'count':commentSize.length}});
     });
   }
 }
