@@ -41,7 +41,4 @@ export class HomePage implements OnInit {
     }, 500);
   }
 
-  toggleInfiniteScroll() {
-    this.infiniteScroll.disabled = !this.infiniteScroll.disabled;
-  }
 }
