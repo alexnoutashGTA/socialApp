@@ -11,34 +11,51 @@ export class HomePage implements OnInit {
 
   constructor(
       private transport: Transport) {
-    this.dataList = [];
+    this.presentationSlice = [];
+    this.contributerInfoList = [];
+    this.presentationDetailedSlice = [];
   }
   postsCollection: any;
-  dataList: any;
+  presentationSlice: any;
+  contributerInfoList: any;
+  presentationDetailedSlice: any;
   // @ts-ignore
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   ngOnInit() {
     this.transport.getPosts().subscribe(data => {
       this.postsCollection = data;
-      for (let i = 0; i < 10; i++) {
-      this.dataList.push(this.postsCollection[i]);
-    }
+      this.addDataToPresenter();
     });
   }
 
   loadData(event) {
-    const newIndex = this.dataList.length;
+    const newIndex = this.presentationSlice.length;
     setTimeout(() => {
-      console.log('Done');
-      for (let i = newIndex; i < newIndex + 10; i++) {
-        this.dataList.push(this.postsCollection[i]);
-      }
+      this.addDataToPresenter();
       event.target.complete();
-      if (this.dataList.length === this.postsCollection.length) {
+      if (this.presentationSlice.length === this.postsCollection.length) {
         event.target.disabled = true;
       }
     }, 500);
   }
-
+  addDataToPresenter() {
+    for (let i = 0; i < 10; i++) {
+      this.presentationSlice.push(this.postsCollection[i]);
+    }
+    this.addDetailToPresenter();
+  }
+  addDetailToPresenter()  {
+    this.presentationSlice.forEach(async record => {
+      let  detail: any;
+      const detailRecordIndex = this.contributerInfoList.indexOf(contributer => contributer.id === record.id);
+      if (detailRecordIndex < 0) {
+        detail = await this.transport.getContributorDetail(record.userId);
+        this.contributerInfoList.push(detail);
+      } else {
+        detail = this.contributerInfoList[detailRecordIndex];
+      }
+      this.presentationDetailedSlice.push({...record, ...detail})
+    });
+  }
 }

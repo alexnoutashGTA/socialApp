@@ -12,11 +12,12 @@
   </ion-button>
 
   <ion-list>
-    <ion-item  *ngFor="let item of dataList">
+    <ion-item  *ngFor="let item of presentationDetailedSlice">
       <ion-label>
         <h2>{{item.title}}</h2>
-        <h4>{{item.body}}</h4>
-        <p>UserId:{{item.userId}}</p>
+        <h4 *ngIf="item.body">{{item.body}}</h4>
+        <p>Name:{{item.name}}}</p>
+        <p *ngIf="item.company.name">Company {{item.company.name}}</p>
       </ion-label>
     </ion-item>
   </ion-list>
