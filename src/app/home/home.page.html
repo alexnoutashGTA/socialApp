@@ -16,11 +16,11 @@
       <ion-label>
         <h2>{{item.title}}</h2>
         <h4>{{item.body}}</h4>
-        <p></p>
+        <p>UserId:{{item.userId}}</p>
       </ion-label>
-    </ion-item>>
+    </ion-item>
   </ion-list>
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+  <ion-infinite-scroll threshold="5%" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content
             loadingSpinner="bubbles"
             loadingText="Loading more data...">
