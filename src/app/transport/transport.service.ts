@@ -5,15 +5,21 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
   providedIn: 'root'
 })
 export class Transport {
-  private postsUrl = 'https://jsonplaceholder.typicode.com/posts';
-  private contributerDetailUrl = new String('https://jsonplaceholder.typicode.com/users/');
+  private postsUrl = 'https://jsonplaceholder.typicode.com/';
+
   constructor(private http: HttpClient) {
 
   }
+  //Get Posts
   getPosts() {
-    return this.http.get(this.postsUrl);
+    return this.http.get(this.postsUrl.concat('posts'));
   }
+  //Get Contributor
   getContributorDetail(id) {
-    return this.http.get(this.contributerDetailUrl.concat(id)).toPromise();
+    return this.http.get(this.postsUrl.concat('users/',id)).toPromise();
+  }
+  //Get Comments
+  getPostComment(id) {
+    return this.http.get(this.postsUrl.concat('posts/',id,'/comments')).toPromise();
   }
 }
