@@ -40,22 +40,21 @@ export class HomePage implements OnInit {
     }, 500);
   }
   addDataToPresenter() {
-    for (let i = 0; i < 10; i++) {
-      this.presentationSlice.push(this.postsCollection[i]);
-    }
-    this.addDetailToPresenter();
+      const startindex = this.presentationSlice.length;
+      this.presentationSlice.push(...this.postsCollection.slice(startindex, startindex + 10));
+      this.addDetailToPresenter();
   }
   addDetailToPresenter()  {
     this.presentationSlice.forEach(async record => {
       let  detail: any;
-      const detailRecordIndex = this.contributerInfoList.indexOf(contributer => contributer.id === record.id);
+      const detailRecordIndex = this.contributerInfoList.indexOf(contributer => contributer.id === record.userId);
       if (detailRecordIndex < 0) {
         detail = await this.transport.getContributorDetail(record.userId);
         this.contributerInfoList.push(detail);
       } else {
         detail = this.contributerInfoList[detailRecordIndex];
       }
-      this.presentationDetailedSlice.push({...record, ...detail})
+      this.presentationDetailedSlice.push({...record, ...detail});
     });
   }
 }
