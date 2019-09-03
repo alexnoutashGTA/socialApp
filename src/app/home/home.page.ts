@@ -19,20 +19,16 @@ export class HomePage implements OnInit {
   presentationSlice: any;
   contributorInfoList: any;
   presentationDetailedSlice: any;
-  commentCount:any;
-
-  // @ts-ignore
-  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   ngOnInit() {
-    //load first 10 Posts
+    // load first 10 Posts
     this.transport.getPosts().subscribe(data => {
       this.postsCollection = data;
       this.addDataToPresenter();
     });
   }
 
-  //load data when scrolling
+  // load data when scrolling
   loadData(event) {
     setTimeout(() => {
       this.addDataToPresenter();
@@ -43,34 +39,36 @@ export class HomePage implements OnInit {
     }, 500);
   }
 
-  //get Posts
+  // get Posts
   addDataToPresenter() {
       const startindex = this.presentationSlice.length;
       this.presentationSlice.push(...this.postsCollection.slice(startindex, startindex + 10));
       this.addDetailToPresenter();
   }
 
-  //Get Post details, name, company and comments number
+  // Get Post details, name, company and comments number
   addDetailToPresenter()  {
     this.presentationSlice.forEach(async record => {
       let  detail: any;
-      let  postComment: any;
-      let commentSize:any;
+      let postComments: any;
       const detailRecordIndex = this.contributorInfoList.indexOf(contributer => contributer.id === record.userId);
       if (detailRecordIndex < 0) {
-        //get contributor detail
+        // get contributor detail
         detail = await this.transport.getContributorDetail(record.userId);
         this.contributorInfoList.push(detail);
-        //get comments
-        postComment = await this.transport.getPostComment(record.id);
-        this.commentCount=postComment;
+        // get comments
+        postComments = await this.transport.getPostComment(record.id);
       } else {
         detail = this.contributorInfoList[detailRecordIndex];
       }
-      //get number of comments
-      commentSize = this.commentCount.filter(com => com.postId ==  record.id);
-      //records to display
-      this.presentationDetailedSlice.push({...record, ...detail, ...{'count':commentSize.length}});
+      // get relevant comments
+      const relevantpostComments = postComments.filter(com => com.postId === record.id);
+
+      // create the object to present
+      const presentatonObj =  (relevantpostComments && relevantpostComments.length > 0) ?
+          {...record, ...detail, ...{count: relevantpostComments.length}} : {...record, ...detail, ...{count: 0}};
+      // records to display
+      this.presentationDetailedSlice.push(presentatonObj);
     });
   }
 }
